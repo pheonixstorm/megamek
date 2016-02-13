@@ -334,12 +334,12 @@ public class Terrain implements ITerrain, Serializable {
             }
             return 1;
         case Terrains.WOODS:
-            if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+            if ((e instanceof Mech) && ((Mech)e).isSuperHeavy() || e.getCrew().getOptions().booleanOption("tm_forest_ranger")) {
                 return level - 1;
             }
             return level;
         case Terrains.JUNGLE:
-            if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+            if ((e instanceof Mech) && ((Mech)e).isSuperHeavy() || e.getCrew().getOptions().booleanOption("tm_forest_ranger")) {
                 return level;
             }
             return level + 1;

@@ -365,13 +365,25 @@ public class Terrain implements ITerrain, Serializable {
                     || (moveMode == EntityMovementMode.WIGE)) {
                 return 0;
             }
+            if (e.getCrew().getOptions().booleanOption("tm_swamp_beast") 
+                    && ((moveMode == EntityMovementMode.TRACKED) || (moveMode == EntityMovementMode.WHEELED))) {
+                return 0;
+            }
             return 1;
         case Terrains.SWAMP:
             if ((moveMode == EntityMovementMode.HOVER)
                     || (moveMode == EntityMovementMode.WIGE)) {
                 return 0;
+            } else if (e.getCrew().getOptions().booleanOption("tm_swamp_beast") 
+                    && ((moveMode == EntityMovementMode.BIPED)
+                           || (moveMode == EntityMovementMode.QUAD))) {
+                return 0;
             } else if ((moveMode == EntityMovementMode.BIPED)
                     || (moveMode == EntityMovementMode.QUAD)) {
+                return 1;
+            } else if (e.getCrew().getOptions().booleanOption("tm_swamp_beast") 
+                    && ((moveMode == EntityMovementMode.TRACKED)
+                            || (moveMode == EntityMovementMode.WHEELED))) {
                 return 1;
             } else {
                 return 2;

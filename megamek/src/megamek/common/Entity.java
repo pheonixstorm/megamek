@@ -6517,6 +6517,9 @@ public abstract class Entity extends TurnOrdered implements Transporter,
             }
             // append the reason modifier
             roll.append(new PilotingRollData(getId(), mod, "entering Rubble"));
+            if (getCrew().getOptions().booleanOption("tm_mountaineer")) {
+                roll.addModifier(-1, "Mountaineer");
+            }
             adjustDifficultTerrainPSRModifier(roll);
         } else {
             roll.addModifier(TargetRoll.CHECK_FALSE,
@@ -9777,6 +9780,9 @@ public abstract class Entity extends TurnOrdered implements Transporter,
         if ((hex.containsTerrain(Terrains.MUD) || hex.containsTerrain(Terrains.SWAMP))
                 && getCrew().getOptions().booleanOption("tm_swamp_beast")) {
             roll.addModifier(-1, "Swamp Beast");
+        }
+        if ((hex.containsTerrain(Terrains.RUBBLE) || hex.containsTerrain(Terrains.ROUGH)) && getCrew().getOptions().booleanOption("tm_mountaineer")) {
+            roll.addModifier(-1, "Mountaineer");
         }
     }
 

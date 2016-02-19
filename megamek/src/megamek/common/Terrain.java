@@ -296,7 +296,7 @@ public class Terrain implements ITerrain, Serializable {
             return 1;
         case Terrains.GEYSER:
         case Terrains.RUBBLE:
-            if (level == 2) {
+            if (level == 6) {
                 return 1;
             }
             return 0;
@@ -328,7 +328,13 @@ public class Terrain implements ITerrain, Serializable {
                 return 1;
             }
             return 0;
-        case Terrains.RUBBLE:
+        case Terrains.RAPIDS:
+            if (level == 2) {
+                if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+                    return 1;
+                }
+                return 2;
+            }
             if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
                 return 0;
             }
@@ -394,15 +400,31 @@ public class Terrain implements ITerrain, Serializable {
                 return 0;
             }
             return 1;
-        case Terrains.RAPIDS:
-        case Terrains.ROUGH:
-            if (level == 2) {
-                if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+        case Terrains.RUBBLE:
+            if (level == 6) {
+                if ((e instanceof Mech) && ((Mech)e).isSuperHeavy() && e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
+                    return 0;
+                }
+                if (((e instanceof Mech) && ((Mech)e).isSuperHeavy()) || e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
                     return 1;
                 }
                 return 2;
             }
-            if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+            if (((e instanceof Mech) && ((Mech)e).isSuperHeavy()) || e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
+                return 0;
+            }
+            return 1;
+        case Terrains.ROUGH:
+            if (level == 2) {
+                if ((e instanceof Mech) && ((Mech)e).isSuperHeavy() && e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
+                    return 0;
+                }
+                if (((e instanceof Mech) && ((Mech)e).isSuperHeavy()) || e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
+                    return 1;
+                }
+                return 2;
+            }
+            if (((e instanceof Mech) && ((Mech)e).isSuperHeavy()) || e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
                 return 0;
             }
             return 1;

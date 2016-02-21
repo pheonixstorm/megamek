@@ -296,7 +296,7 @@ public class Terrain implements ITerrain, Serializable {
             return 1;
         case Terrains.GEYSER:
         case Terrains.RUBBLE:
-            if (level == 2) {
+            if (level == 6) {
                 return 1;
             }
             return 0;
@@ -328,18 +328,24 @@ public class Terrain implements ITerrain, Serializable {
                 return 1;
             }
             return 0;
-        case Terrains.RUBBLE:
+        case Terrains.RAPIDS:
+            if (level == 2) {
+                if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+                    return 1;
+                }
+                return 2;
+            }
             if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
                 return 0;
             }
             return 1;
         case Terrains.WOODS:
-            if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+            if ((e instanceof Mech) && ((Mech)e).isSuperHeavy() || e.getCrew().getOptions().booleanOption("tm_forest_ranger")) {
                 return level - 1;
             }
             return level;
         case Terrains.JUNGLE:
-            if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+            if ((e instanceof Mech) && ((Mech)e).isSuperHeavy() || e.getCrew().getOptions().booleanOption("tm_forest_ranger")) {
                 return level;
             }
             return level + 1;
@@ -365,13 +371,25 @@ public class Terrain implements ITerrain, Serializable {
                     || (moveMode == EntityMovementMode.WIGE)) {
                 return 0;
             }
+            if (e.getCrew().getOptions().booleanOption("tm_swamp_beast") 
+                    && ((moveMode == EntityMovementMode.TRACKED) || (moveMode == EntityMovementMode.WHEELED))) {
+                return 0;
+            }
             return 1;
         case Terrains.SWAMP:
             if ((moveMode == EntityMovementMode.HOVER)
                     || (moveMode == EntityMovementMode.WIGE)) {
                 return 0;
+            } else if (e.getCrew().getOptions().booleanOption("tm_swamp_beast") 
+                    && ((moveMode == EntityMovementMode.BIPED)
+                           || (moveMode == EntityMovementMode.QUAD))) {
+                return 0;
             } else if ((moveMode == EntityMovementMode.BIPED)
                     || (moveMode == EntityMovementMode.QUAD)) {
+                return 1;
+            } else if (e.getCrew().getOptions().booleanOption("tm_swamp_beast") 
+                    && ((moveMode == EntityMovementMode.TRACKED)
+                            || (moveMode == EntityMovementMode.WHEELED))) {
                 return 1;
             } else {
                 return 2;
@@ -382,15 +400,31 @@ public class Terrain implements ITerrain, Serializable {
                 return 0;
             }
             return 1;
-        case Terrains.RAPIDS:
-        case Terrains.ROUGH:
-            if (level == 2) {
-                if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+        case Terrains.RUBBLE:
+            if (level == 6) {
+                if ((e instanceof Mech) && ((Mech)e).isSuperHeavy() && e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
+                    return 0;
+                }
+                if (((e instanceof Mech) && ((Mech)e).isSuperHeavy()) || e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
                     return 1;
                 }
                 return 2;
             }
-            if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+            if (((e instanceof Mech) && ((Mech)e).isSuperHeavy()) || e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
+                return 0;
+            }
+            return 1;
+        case Terrains.ROUGH:
+            if (level == 2) {
+                if ((e instanceof Mech) && ((Mech)e).isSuperHeavy() && e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
+                    return 0;
+                }
+                if (((e instanceof Mech) && ((Mech)e).isSuperHeavy()) || e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
+                    return 1;
+                }
+                return 2;
+            }
+            if (((e instanceof Mech) && ((Mech)e).isSuperHeavy()) || e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
                 return 0;
             }
             return 1;

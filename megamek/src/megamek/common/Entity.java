@@ -6517,6 +6517,9 @@ public abstract class Entity extends TurnOrdered implements Transporter,
             }
             // append the reason modifier
             roll.append(new PilotingRollData(getId(), mod, "entering Rubble"));
+            if (getCrew().getOptions().booleanOption("tm_mountaineer")) {
+                roll.addModifier(-1, "Mountaineer");
+            }
             adjustDifficultTerrainPSRModifier(roll);
         } else {
             roll.addModifier(TargetRoll.CHECK_FALSE,
@@ -6544,6 +6547,9 @@ public abstract class Entity extends TurnOrdered implements Transporter,
                     "avoid bogging down"));
             if ((this instanceof Mech) && ((Mech) this).isSuperHeavy()) {
                 roll.addModifier(1, "superheavy mech avoiding bogging down");
+            }
+            if (getCrew().getOptions().booleanOption("tm_swamp_beast")) {
+                roll.addModifier(-1, "swamp beast");
             }
             adjustDifficultTerrainPSRModifier(roll);
         } else {
@@ -9767,6 +9773,16 @@ public abstract class Entity extends TurnOrdered implements Transporter,
         int modifier = hex.terrainPilotingModifier(getMovementMode());
         if (modifier != 0) {
             roll.addModifier(modifier, "difficult terrain");
+        }
+        if (hex.containsTerrain(Terrains.JUNGLE) && getCrew().getOptions().booleanOption("tm_forest_ranger")) {
+            roll.addModifier(-1, "Forest Ranger");
+        }
+        if ((hex.containsTerrain(Terrains.MUD) || hex.containsTerrain(Terrains.SWAMP))
+                && getCrew().getOptions().booleanOption("tm_swamp_beast")) {
+            roll.addModifier(-1, "Swamp Beast");
+        }
+        if ((hex.containsTerrain(Terrains.RUBBLE) || hex.containsTerrain(Terrains.ROUGH)) && getCrew().getOptions().booleanOption("tm_mountaineer")) {
+            roll.addModifier(-1, "Mountaineer");
         }
     }
 

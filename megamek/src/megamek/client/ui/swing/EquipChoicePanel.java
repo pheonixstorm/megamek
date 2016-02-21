@@ -308,7 +308,7 @@ public class EquipChoicePanel extends JPanel implements Serializable {
         // Set up mines
         setupMines();
         add(panMines, GBC.eop().anchor(GridBagConstraints.CENTER));
-	}
+    }
 
     public void initialize() {
         choC3.setEnabled(false);
@@ -323,7 +323,7 @@ public class EquipChoicePanel extends JPanel implements Serializable {
         disableMGSetting();
         disableMineSetting();
         panInfArmor.setEnabled(false);
-	}
+    }
 
     public void applyChoices() {
         boolean autoEject = chAutoEject.isSelected();
@@ -410,7 +410,7 @@ public class EquipChoicePanel extends JPanel implements Serializable {
             entity.setC3NetId(client.getEntity(entityCorrespondance[choC3
                     .getSelectedIndex()]));
         }
-	}
+    }
 
     private void setupBombs() {
         GridBagLayout gbl = new GridBagLayout();
@@ -1085,6 +1085,7 @@ public class EquipChoicePanel extends JPanel implements Serializable {
                 add(lLoc, GBC.std());
                 add(m_choice, GBC.std());
                 add(m_num_shots, GBC.eol());
+                chHotLoad.setSelected(m_mounted.isHotLoaded());
                 if (clientgui.getClient().getGame().getOptions().booleanOption(
                         "lobby_ammo_dump")) { //$NON-NLS-1$
                     add(labDump, GBC.std());

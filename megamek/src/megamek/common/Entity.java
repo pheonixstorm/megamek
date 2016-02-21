@@ -13038,19 +13038,19 @@ public abstract class Entity extends TurnOrdered implements Transporter,
      *
      * @return
      */
-    public boolean canEscape() {    	
-    	if(null == getCrew()) {
-    		return false;
-    	}
-    	//if the crew is unconscious, dead, or ejected, no escape
-    	if(getCrew().isUnconscious() 
-    			|| getCrew().isDead() 
-    			|| (getCrew().isEjected() && !(this instanceof EjectedCrew))) {
-    		return false;
-    	}
-    	
-    	//what else? If its permaneantly immobilized or shutdown it can't escape
-    	//TODO: should stalled and stuck be here?
+    public boolean canEscape() {        
+        if(null == getCrew()) {
+            return false;
+        }
+        //if the crew is unconscious, dead, or ejected, no escape
+        if(getCrew().isUnconscious() 
+                || getCrew().isDead() 
+                || (getCrew().isEjected() && !(this instanceof EjectedCrew))) {
+            return false;
+        }
+        
+        //what else? If its permaneantly immobilized or shutdown it can't escape
+        //TODO: should stalled and stuck be here?
         return !isPermanentlyImmobilized(false) && !isShutDown();
     }
 
@@ -13381,7 +13381,8 @@ public abstract class Entity extends TurnOrdered implements Transporter,
 
             // Make sure this is a weapon.
             // System.out.print("Getting WeaponType... ");
-            if (!(m.getType() instanceof WeaponType)) {
+            if (!(m.getType() instanceof WeaponType) 
+                    && !(m.getType().hasFlag(MiscType.F_CLUB))) {
                 System.out.println(q.toLog() + " failed for " + getChassis()
                                    + " " + getModel() + " - " + m.getName()
                                    + " is not a weapon!");

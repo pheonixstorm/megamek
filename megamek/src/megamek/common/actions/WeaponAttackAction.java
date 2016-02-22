@@ -1230,6 +1230,11 @@ public class WeaponAttackAction extends AbstractAttackAction implements
             toHit.addModifier(+1, "swamp beast");
         }
 
+        // Other Gunnery SPA Checks
+        if (te.getCrew().getOptions().booleanOption("shaky_stick") && (!(ae instanceof Aero) || !(ae instanceof VTOL))) {
+            toHit.addModifier(+1, "Shaky Stick");
+        }
+
         // check for VDNI
         if (ae.getCrew().getOptions().booleanOption("vdni")
             || ae.getCrew().getOptions().booleanOption("bvdni")) {

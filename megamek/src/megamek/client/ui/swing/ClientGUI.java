@@ -88,6 +88,7 @@ import megamek.common.Mounted;
 import megamek.common.MovePath;
 import megamek.common.WeaponOrderHandler;
 import megamek.common.MovePath.MoveStepType;
+import megamek.common.actions.EntityAction;
 import megamek.common.actions.WeaponAttackAction;
 import megamek.common.event.GameCFREvent;
 import megamek.common.event.GameEndEvent;
@@ -225,12 +226,18 @@ public class ClientGUI extends JPanel implements WindowListener, BoardViewListen
      * Current Selected entity
      */
     private int selectedEntityNum = Entity.NONE;
-    
+
     /**
      * Flag that indicates whether hotkeys should be ignored or not.  This is 
      * used for disabling hot keys when various dialogs are displayed.
      */
     private boolean ignoreHotKeys = false;
+
+    /**
+     * Keeps track of the Entity ID for the entity currently taking a pointblank
+     * shot.
+     */
+    private int pointblankEID = Entity.NONE;
 
     /**
      * Construct a client which will display itself in a new frame. It will not
@@ -1001,6 +1008,7 @@ public class ClientGUI extends JPanel implements WindowListener, BoardViewListen
                 mechW.setVisible(false);
                 setMapVisible(false);
                 break;
+            case PHASE_POINTBLANK_SHOT:
             case PHASE_SET_ARTYAUTOHITHEXES:
             case PHASE_DEPLOY_MINEFIELDS:
             case PHASE_DEPLOYMENT:
@@ -1164,6 +1172,17 @@ public class ClientGUI extends JPanel implements WindowListener, BoardViewListen
                 component = new FiringDisplay(this);
                 main = "BoardView"; //$NON-NLS-1$
                 secondary = "FiringDisplay"; //$NON-NLS-1$
+                component.setName(secondary);
+                if (!mainNames.containsValue(main)) {
+                    panMain.add(bvc, main);
+                }
+                currPhaseDisplay = (StatusBarPhaseDisplay)(component);
+                panSecondary.add(component, secondary);
+                break;
+            case PHASE_POINTBLANK_SHOT:
+                component = new PointblankShotDisplay(this);
+                main = "BoardView"; //$NON-NLS-1$
+                secondary = "PointblankShotDisplay"; //$NON-NLS-1$
                 component.setName(secondary);
                 if (!mainNames.containsValue(main)) {
                     panMain.add(bvc, main);
@@ -1985,6 +2004,52 @@ public class ClientGUI extends JPanel implements WindowListener, BoardViewListen
                                 apdsOptions.indexOf(result) - 1);
                     }
                     break;
+                case Packet.COMMAND_CFR_HIDDEN_PBS:
+                    Entity attacker = client.getGame().getEntity(
+                            evt.getEntityId());
+                    Entity target = client.getGame().getEntity(
+                            evt.getTargetId());
+                    // Are we not the client handling the PBS?
+                    if ((attacker == null) || (target == null)) {
+                        if (curPanel instanceof StatusBarPhaseDisplay) {
+                            ((StatusBarPhaseDisplay) curPanel)
+                                    .setStatusBarText(Messages
+                                            .getString("StatusBarPhaseDisplay.pointblankShot"));
+                        }
+                        return;
+                    }
+                    // If this is the client to handle the PBS, take care of it
+                    bv.centerOnHex(attacker.getPosition());
+                    msg = Messages.getString(
+                            "ClientGUI.PointBlankShot.Message",
+                            new Object[] { target.getDisplayName(),
+                                    attacker.getDisplayName() });
+                    title = Messages
+                            .getString("ClientGUI.PointBlankShot.Title");
+                    // Ask whether the player wants to take a PBS or not
+                    int pbsChoice = JOptionPane.showConfirmDialog(frame, msg,
+                            title, JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+                    // Process the PBS - switch to PointblankShotDisplay
+                    if (pbsChoice == JOptionPane.YES_OPTION) {
+                        // Send a non-null response to indicate PBS is accepted
+                        // This allows the servers to notify the clients,
+                        // as they may be in for a wait
+                        client.sendHiddenPBSCFRResponse(new Vector<EntityAction>());
+                        // Used to indicate it's this player's turn
+                        setPointblankEID(evt.getEntityId());
+                        // Switch to the right d isplay
+                        switchPanel(IGame.Phase.PHASE_POINTBLANK_SHOT);
+                        PointblankShotDisplay curDisp = ((PointblankShotDisplay) curPanel);
+                        // Set targeting info
+                        curDisp.beginMyTurn();
+                        curDisp.selectEntity(evt.getEntityId());
+                        curDisp.target(target);
+                        bv.select(target.getPosition());
+                    } else { // PBS declined
+                        client.sendHiddenPBSCFRResponse(null);
+                    }
+                    break;
             }
         }
     };
@@ -2286,6 +2351,18 @@ public class ClientGUI extends JPanel implements WindowListener, BoardViewListen
      */
     public JComponent getCurrentPanel() {
         return curPanel;
+    }
+
+    public boolean isProcessingPointblankShot() {
+        return pointblankEID != Entity.NONE;
+    }
+
+    public void setPointblankEID(int eid) {
+        this.pointblankEID = eid;
+    }
+
+    public int getPointblankEID() {
+        return pointblankEID;
     }
 
 }

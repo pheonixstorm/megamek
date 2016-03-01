@@ -1230,14 +1230,12 @@ public class WeaponAttackAction extends AbstractAttackAction implements
                 && te.moved == EntityMovementType.MOVE_RUN) {
                 toHit.addModifier(+1, "swamp beast");
             }
+            if (te.getCrew().getOptions().booleanOption("shaky_stick") && (!(ae instanceof Aero) || !(ae instanceof VTOL))) {
+                toHit.addModifier(+1, "Shaky Stick");
+            }
         }
         
-
-        // Other Gunnery SPA Checks
-        if (te.getCrew().getOptions().booleanOption("shaky_stick") && (!(ae instanceof Aero) || !(ae instanceof VTOL))) {
-            toHit.addModifier(+1, "Shaky Stick");
-        }
-
+        
         // check for VDNI
         if (ae.getCrew().getOptions().booleanOption("vdni")
             || ae.getCrew().getOptions().booleanOption("bvdni")) {

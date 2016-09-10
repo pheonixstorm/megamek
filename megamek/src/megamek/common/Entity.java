@@ -9865,6 +9865,10 @@ public abstract class Entity extends TurnOrdered implements Transporter,
         }
         IHex hex = game.getBoard().getHex(c);
         hex.terrainPilotingModifier(getMovementMode(), roll, enteringRubble);
+        
+        if (hex.containsTerrain(Terrains.JUNGLE) && getCrew().getOptions().booleanOption("tm_forest_ranger")) {
+            roll.addModifier(-1, "Forest Ranger");
+        }
     }
 
     /**

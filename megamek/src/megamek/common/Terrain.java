@@ -395,6 +395,12 @@ public class Terrain implements ITerrain, Serializable {
                     && (level > 1)) {
                 return level - 1;
             }
+            if (e.getCrew().getOptions().booleanOption("tm_forest_ranger")) {
+                if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+                    return level - 2;
+                }
+                return level -1;
+            }
             if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
                 return level - 1;
             }
@@ -402,6 +408,12 @@ public class Terrain implements ITerrain, Serializable {
         case Terrains.JUNGLE:
             if (e.getCrew().getOptions().booleanOption("foot_cav")
                     && (moveMode == EntityMovementMode.INF_LEG)) {
+                return level;
+            }
+            if (e.getCrew().getOptions().booleanOption("tm_forest_ranger")) {
+                if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+                    return level - 1;
+                }
                 return level;
             }
             if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {

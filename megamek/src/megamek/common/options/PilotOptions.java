@@ -55,6 +55,7 @@ public class PilotOptions extends AbstractOptions {
         // addOption(adv, "speed_demon", false); //$NON-NLS-1$
         // addOption(adv, "stand_aside", false); //$NON-NLS-1$
         // addOption(adv, "swordsman", false); //$NON-NLS-1$
+        addOption(adv, "tm_forest_ranger", false); //$NON-NLS-1$
         // addOption(adv, "tm_", false); //$NON-NLS-1$
         // addOption(adv, "wind_walker", false); //$NON-NLS-1$
         // addOption(adv, "zweihander", false); //$NON-NLS-1$

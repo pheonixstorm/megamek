@@ -2644,7 +2644,12 @@ public class MoveStep implements Serializable {
                     if (destHex.terrainLevel(Terrains.WATER) == 1) {
                         mp++;
                     } else if (destHex.terrainLevel(Terrains.WATER) > 1) {
-                        mp += 3;
+                        if (getEntity().getCrew().getOptions().booleanOption("tm_frogman")
+                                && ((entity instanceof Mech) || (entity instanceof Protomech))) {
+                            mp += 2;
+                        } else {
+                            mp += 3;
+                        }
                     }
                 }
                 // if using non-careful movement on ice then reduce cost

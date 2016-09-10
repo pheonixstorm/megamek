@@ -375,6 +375,22 @@ public class Terrain implements ITerrain, Serializable {
             }
             return 0;
         case Terrains.RUBBLE:
+            if (e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
+                if (level == 6) {
+                    if (((e instanceof Mech) && ((Mech)e).isSuperHeavy())
+                        || (e.getCrew().getOptions().booleanOption("foot_cav")
+                                && (moveMode == EntityMovementMode.INF_LEG))) {
+                        return 0;
+                    }
+                    return 1;
+                }
+                if (((e instanceof Mech) && ((Mech)e).isSuperHeavy())
+                    || (e.getCrew().getOptions().booleanOption("foot_cav")
+                            && (moveMode == EntityMovementMode.INF_LEG))) {
+                    return 0;
+                }
+                return 0;
+            }
             if (level == 6) {
                 if (((e instanceof Mech) && ((Mech)e).isSuperHeavy())
                         || (e.getCrew().getOptions().booleanOption("foot_cav")
@@ -395,6 +411,12 @@ public class Terrain implements ITerrain, Serializable {
                     && (level > 1)) {
                 return level - 1;
             }
+            if (e.getCrew().getOptions().booleanOption("tm_forest_ranger")) {
+                if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+                    return level - 2;
+                }
+                return level -1;
+            }
             if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
                 return level - 1;
             }
@@ -402,6 +424,12 @@ public class Terrain implements ITerrain, Serializable {
         case Terrains.JUNGLE:
             if (e.getCrew().getOptions().booleanOption("foot_cav")
                     && (moveMode == EntityMovementMode.INF_LEG)) {
+                return level;
+            }
+            if (e.getCrew().getOptions().booleanOption("tm_forest_ranger")) {
+                if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
+                    return level - 1;
+                }
                 return level;
             }
             if ((e instanceof Mech) && ((Mech)e).isSuperHeavy()) {
@@ -430,11 +458,22 @@ public class Terrain implements ITerrain, Serializable {
                     || (moveMode == EntityMovementMode.WIGE)) {
                 return 0;
             }
+            if (e.getCrew().getOptions().booleanOption("tm_swamp_beast") 
+                    && ((moveMode == EntityMovementMode.TRACKED) || (moveMode == EntityMovementMode.WHEELED))) {
+                return 0;
+            }
             return 1;
         case Terrains.SWAMP:
             if ((moveMode == EntityMovementMode.HOVER)
                     || (moveMode == EntityMovementMode.WIGE)) {
                 return 0;
+            } else if (e.getCrew().getOptions().booleanOption("tm_swamp_beast")) {
+                if ((moveMode == EntityMovementMode.BIPED)
+                        || (moveMode == EntityMovementMode.QUAD)) {
+                    return 0;
+                } else {
+                    return 1;
+                }
             } else if ((moveMode == EntityMovementMode.BIPED)
                     || (moveMode == EntityMovementMode.QUAD)) {
                 return 1;
@@ -459,6 +498,16 @@ public class Terrain implements ITerrain, Serializable {
             }
             return 1;
         case Terrains.ROUGH:
+            if (e.getCrew().getOptions().booleanOption("tm_mountaineer")) {
+                if (level == 2) {
+                    if (((e instanceof Mech) && ((Mech)e).isSuperHeavy())
+                            || (e.getCrew().getOptions().booleanOption("foot_cav") && (moveMode == EntityMovementMode.INF_LEG))) {
+                        return 0;
+                    }
+                    return 1;
+                }
+                return 0;
+            }
             if (e.getCrew().getOptions().booleanOption("foot_cav") && (moveMode == EntityMovementMode.INF_LEG)) {
                 return level - 1;
             }

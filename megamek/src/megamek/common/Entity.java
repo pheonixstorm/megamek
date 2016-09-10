@@ -6592,6 +6592,9 @@ public abstract class Entity extends TurnOrdered implements Transporter,
                 && (curHex.terrainLevel(Terrains.RUBBLE) > 0) && !isPavementStep
                 && (this instanceof Mech)) {
             adjustDifficultTerrainPSRModifier(roll);
+            if (getCrew().getOptions().booleanOption("tm_mountaineer")) {
+                roll.addModifier(-1, "Mountaineer");
+            }
         } else {
             roll.addModifier(TargetRoll.CHECK_FALSE,
                     "Check false: Entity is not entering rubble");
@@ -6618,6 +6621,9 @@ public abstract class Entity extends TurnOrdered implements Transporter,
                     new PilotingRollData(getId(), bgMod, "avoid bogging down"));
             if ((this instanceof Mech) && ((Mech) this).isSuperHeavy()) {
                 roll.addModifier(1, "superheavy mech avoiding bogging down");
+            }
+            if (getCrew().getOptions().booleanOption("tm_swamp_beast")) {
+                roll.addModifier(-1, "swamp beast");
             }
             addPilotingModifierForTerrain(roll, curPos, false);
             adjustDifficultTerrainPSRModifier(roll);
@@ -6671,6 +6677,10 @@ public abstract class Entity extends TurnOrdered implements Transporter,
             mod = 1;
         }
 
+        if ((waterLevel > 1) && getCrew().getOptions().booleanOption("tm_frogman")
+                && ((this instanceof Mech) || (this instanceof Protomech))) {
+            roll.append(new PilotingRollData(getId(), -1, "Frogman"));
+        }
         if (waterLevel > 0) {
             // append the reason modifier
             roll.append(new PilotingRollData(getId(), mod,
@@ -9865,6 +9875,18 @@ public abstract class Entity extends TurnOrdered implements Transporter,
         }
         IHex hex = game.getBoard().getHex(c);
         hex.terrainPilotingModifier(getMovementMode(), roll, enteringRubble);
+        
+        if (hex.containsTerrain(Terrains.JUNGLE) && getCrew().getOptions().booleanOption("tm_forest_ranger")) {
+            roll.addModifier(-1, "Forest Ranger");
+        }
+        if ((hex.containsTerrain(Terrains.MUD) || hex.containsTerrain(Terrains.SWAMP))
+                && getCrew().getOptions().booleanOption("tm_swamp_beast")) {
+            roll.addModifier(-1, "Swamp Beast");
+        }
+        if ((hex.containsTerrain(Terrains.ROUGH) || hex.containsTerrain(Terrains.RUBBLE))
+                && getCrew().getOptions().booleanOption("tm_mountaineer")) {
+            roll.addModifier(-1, "Mountaineer");
+        }
     }
 
     /**

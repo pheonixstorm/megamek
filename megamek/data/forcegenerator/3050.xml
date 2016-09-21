@@ -4888,6 +4888,7 @@
 	<chassis name='J-37 Ordnance Transport' unitType='Tank'>
 		<availability>General:1</availability>
 		<model name='(Original)'>
+			<roles>support</roles>
 			<availability>General:8</availability>
 		</model>
 	</chassis>
@@ -5469,6 +5470,7 @@
 	<chassis name='Thumper Artillery Vehicle' unitType='Tank'>
 		<availability>HL:5,IS:6,Periphery.Deep:7,Periphery:7</availability>
 		<model name='(Standard)'>
+			<roles>artillery</roles>
 			<availability>General:8</availability>
 		</model>
 	</chassis>

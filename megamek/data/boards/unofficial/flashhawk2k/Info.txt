@@ -1,0 +1,10 @@
+Hy all!
+Battle of Stanrey and Battle of Kalnock are two games from the Battletechhistory long gone. Both were prototypes for Battletech or ancestors of this game. For everyone who wants to know more about them, go visit:
+
+http://dougram.battletechnology.org/Dougram/Stanrey.htm
+http://dougram.battletechnology.org/Dougram/Kalnock.htm
+
+Since i can´t code, i hope this is donation that can be accepted too :)
+Fh2k
+
+(Thanks to fastsammy for writing his mapsplitt tool -  i did it in excel and it was mess, your program worked me through!!)
